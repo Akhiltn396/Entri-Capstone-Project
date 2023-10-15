@@ -22,7 +22,7 @@ const Footer = () => {
         className="copy"
         style={{ textAlign: "center", paddingTop: "130px" }}
       >
-        © Copyright 2020 Vlogiffy
+        © Copyright 2020 Vloguider
       </div>
     </div>
   );

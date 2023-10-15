@@ -1,4 +1,7 @@
 .feature {
+  position: fixed;
+  display: flex;
+  background-color: lightgray;
   .mapboxgl-canvas {
     position: absolute;
     top: 0;

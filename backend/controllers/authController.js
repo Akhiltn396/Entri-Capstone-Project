@@ -7,13 +7,14 @@ const createError = require("../utils/createErr");
 const register = async (req, res, next) => {
   try {
     const salt = bcrypt.genSaltSync(10);
-    const { username, email, password, state } = req.body;
+    const { username, email,phone, password, state } = req.body;
     const hash = await bcrypt.hash(password
         , salt);
 
     const newUser = new User({
       username,
       email,
+      phone,
       state,
       password: hash,
     });

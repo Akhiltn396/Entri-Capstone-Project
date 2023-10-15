@@ -1,5 +1,5 @@
 const express = require("express");
-const {createPin,getPin} = require("../controllers/pinController");
+const {createPin,getPin, latlongPin} = require("../controllers/pinController");
 
 const router = express.Router();
 
@@ -7,5 +7,6 @@ const router = express.Router();
 
 router.post("/",createPin );
 router.get("/",getPin );
+router.get("/destData",latlongPin );
 
 module.exports = router

@@ -1,15 +1,19 @@
 import React from "react";
 import "./About.scss";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const About = () => {
-  const user = true;
+  const { user, error, loading, message } = useSelector((state) => state.auth);
+  const { destination } = useSelector((state) => state.search);
 
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault()
     if (user) {
       navigate("/feature");
+
     } else {
       navigate("/login");
     }

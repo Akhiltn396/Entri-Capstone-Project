@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const db = require("./config/dbConnect");
 const authRoute = require("./routes/authRoutes");
 const pinRoute = require("./routes/pinRoutes");
-// const  hotelRoute  = require("./routes/hotels")
+const  searchRoute  = require("./routes/searchRoutes")
 // const  roomRoute  = require("./routes/rooms")
 // const paymentRoute = require("./routes/payment")
 
@@ -30,6 +30,7 @@ app.use((err, req, res, next) => {
 
 app.use("/api/auth", authRoute);
 app.use("/api/pins", pinRoute);
+app.use("/api/search", searchRoute);
 // app.use("/api/hotels",hotelRoute)
 // app.use("/api/rooms",roomRoute)
 // app.use("/api/payment",paymentRoute)
