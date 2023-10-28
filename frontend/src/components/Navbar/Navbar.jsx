@@ -4,14 +4,13 @@ import Cam from "../../img/camera.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../redux/authSlice";
+import { remove } from "../../redux/searchSlice";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-  const { user, error, loading, message } = useSelector((state) => state.auth);
-  console.log(user?.payload)
+  const dispatch = useDispatch();
 
-
+  const currentUser = JSON.parse(localStorage.getItem("user"));
   const handleLogin = () => {
     navigate("/login");
   };
@@ -19,10 +18,12 @@ const Navbar = () => {
   const handleRegister = () => {
     navigate("/register");
   };
-  const handleLogout = () => {
-
-    localStorage.removeItem("user");
-    dispatch(logOut(user));
+  const handleLogout = (e) => {
+    e.preventDefault()
+    localStorage.setItem("user", null);
+    navigate("/");
+    dispatch(logOut(currentUser));
+    dispatch(remove());
   };
   return (
     <div className="navbar">
@@ -34,12 +35,14 @@ const Navbar = () => {
         <div className="title">
           <h1>Vloguider</h1>
         </div>
-
         <div className="user">
-          {user?.payload?._id ? (
-            <button className="button login" onClick={handleLogout}>
-              Logout
-            </button>
+          {currentUser ? (
+            <>
+
+              <button className="button login" onClick={handleLogout}>
+                Logout
+              </button>
+            </>
           ) : (
             <>
               <button className="button login" onClick={handleLogin}>

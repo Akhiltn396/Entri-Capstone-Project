@@ -10,22 +10,20 @@ import { format } from "timeago.js";
 import newRequest from "../../utils/newRequest";
 import SideBar from "../../components/SideBar/SideBar";
 import { useDispatch, useSelector } from "react-redux";
+import upload from "../../components/utils/upload";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Feature = () => {
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.auth);
+  const currentUser = JSON.parse(localStorage.getItem("user"));
   const search = useSelector((state) => state.search);
   const place = search.destination;
-
-  // console.log("lat",search.latitude.location.coordinates[1]);
-
-  console.log(user);
-
+  console.log(currentUser?.details?.isAdmin);
   const [viewPort, setViewport] = useState({
     latitude: search.latitude ? search.latitude : 10.1632,
     longitude: search.longitude ? search.longitude : 76.6413,
-    zoom: search.zoom,
+    zoom: search.zoom || 6,
   });
 
   const latitude = viewPort.latitude;
@@ -45,9 +43,12 @@ const Feature = () => {
   console.log("newPlace", newPlace);
   const [category, setCategory] = useState(null);
   const [sim, setSim] = useState(null);
-  console.log(sim);
+  const [photos, setPhotos] = useState([]);
+  const [uploading, setUploading] = useState(false);
   const [title, setTitle] = useState(null);
   const [desc, setDesc] = useState(null);
+  console.log(photos);
+
   const [star, setStar] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const { isLoading, error, data } = useQuery({
@@ -62,7 +63,7 @@ const Feature = () => {
           console.log("error" + errorData);
         }),
   });
-
+  console.log(data);
   const handleMarkerClick = (id, lat, long) => {
     setCurrentPlaceId(id);
     setViewport({ ...viewPort, latitude: lat, longitude: long });
@@ -79,7 +80,6 @@ const Feature = () => {
 
   const mutation = useMutation({
     mutationFn: (pin) => {
-
       return newRequest
         .post("/", pin)
         .then((res) => {
@@ -95,13 +95,34 @@ const Feature = () => {
     },
   });
 
+  //handleUpload
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    setUploading(true);
+    try {
+      const images = await Promise.all(
+        [...photos].map(async (file) => {
+          //[...photos is using because multiples files are stored as a file list in js.inorder to convert them into an array we can use this ]
+          const url = await upload(file);
+          return url;
+        })
+      );
+      setPhotos(images);
+
+      setUploading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const newPin = {
-      username: user?.user?.payload?.username,
+      username: currentUser?.details?.username,
       category,
       sim,
+      photos,
       title,
       desc,
       rating: star,
@@ -116,7 +137,14 @@ const Feature = () => {
     mutation.mutate(newPin);
 
     setNewPlace(null);
+    setPhotos("");
   };
+  const mutationDelete = useMutation((id) => {
+    return newRequest.delete(`/${id}`);
+  });
+  const handleDelete = (id) =>{
+    mutationDelete.mutate(id);
+  }
 
   return (
     <div className="feature" style={{ height: "100vh", width: "100vw" }}>
@@ -144,7 +172,7 @@ const Feature = () => {
                     style={{
                       fontSize: viewPort.zoom * 6,
                       color:
-                        d.username === user?.user?.payload?.username
+                         currentUser?.details?.isAdmin
                           ? "red"
                           : "slateblue",
                       cursor: "pointer",
@@ -162,13 +190,16 @@ const Feature = () => {
                     // offset={[30, -1650]}
                     maxWidth={"230px"}
                     style={{
-                      backgroundColor: "white",
                       height: "fit-content",
                       marginLeft: "20px",
                     }}
                     className="string"
                   >
+
                     <div className="card">
+                      {currentUser?.details?.isAdmin &&
+                    <DeleteIcon  className="delete" onClick={()=>handleDelete(d._id)}/>
+                      }
                       <label>Place</label>
                       <h4 className="place">{d.title}</h4>
                       <label>Review</label>
@@ -190,7 +221,7 @@ const Feature = () => {
             ))}
 
         {newPlace &&
-          (!user?.user?.payload?.isAdmin ? (
+          (!currentUser?.details?.isAdmin ? (
             <Popup
               longitude={newPlace?.lng}
               latitude={newPlace?.lat}
@@ -200,7 +231,7 @@ const Feature = () => {
               // offset={[30, -1650]}
               maxWidth={"230px"}
               style={{
-                backgroundColor: "white",
+                backgroundColor: "",
                 height: "fit-content",
                 marginLeft: "20px",
               }}
@@ -227,6 +258,7 @@ const Feature = () => {
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
+
                   <button type="submit" className="submitButton">
                     Add Pin
                   </button>
@@ -243,8 +275,8 @@ const Feature = () => {
               // offset={[30, -1650]}
               maxWidth={"230px"}
               style={{
-                backgroundColor: "white",
-                height: "fit-content",
+                backgroundColor: "",
+                height: "320px",
                 marginLeft: "20px",
               }}
               // className="string"
@@ -277,6 +309,7 @@ const Feature = () => {
                   <textarea
                     placeholder="Say us something about this place."
                     onChange={(e) => setDesc(e.target.value)}
+                    style={{ paddingBottom: "20px" }}
                   />
                   <label>Rating</label>
                   <select onChange={(e) => setStar(e.target.value)}>
@@ -286,6 +319,19 @@ const Feature = () => {
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
+                  <div className="imag">
+                    <div className="imagesInputs">
+                      <label htmlFor="">Upload Images</label>
+                      <input
+                        type="file"
+                        multiple
+                        onChange={(e) => setPhotos(e.target.files)}
+                      />
+                      <button onClick={handleUpload}>
+                        {uploading ? "uploading" : "Upload"}
+                      </button>
+                    </div>
+                  </div>
                   <button type="submit" className="submitButton">
                     Add Pin
                   </button>

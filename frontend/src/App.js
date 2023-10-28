@@ -4,19 +4,28 @@ import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import Footer from "./components/Footer/Footer";
+import Drag from "./components/Drag/Drag";
 import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
 import Feature from "./pages/Feature/Feature";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import { PersistGate } from "redux-persist/integration/react";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { persistStore } from "redux-persist";
 import store from "./redux/store";
+import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
+import { useEffect } from "react";
 
 function App() {
   const queryClient = new QueryClient();
   let persistor = persistStore(store);
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+  console.log(currentUser);
+
+useEffect(() => {
+console.log("Hii");
+}, [currentUser])
 
   const Layout = () => {
     return (
@@ -45,7 +54,12 @@ function App() {
         },
         {
           path: "/feature",
-          element: <Feature />,
+          element:
+          <ProtectedRoutes isAuthenticated={currentUser}><Feature /></ProtectedRoutes>
+        },
+        {
+          path: "/drag",
+          element: <Drag />,
         },
       ],
     },

@@ -4,16 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const About = () => {
-  const { user, error, loading, message } = useSelector((state) => state.auth);
   const { destination } = useSelector((state) => state.search);
+  const currentUser = JSON.parse(localStorage.getItem("user"));
 
   const navigate = useNavigate();
 
   const handleClick = (e) => {
-    e.preventDefault()
-    if (user) {
+    e.preventDefault();
+    if (currentUser) {
       navigate("/feature");
-
     } else {
       navigate("/login");
     }
@@ -21,10 +20,10 @@ const About = () => {
   return (
     <div style={{ marginTop: "150px" }}>
       <div className="" style={{ textAlign: "center" }}>
-        <h1>About Vlogiffy</h1>
+        <h1>About Vloguider</h1>
         <p>
           The more you travel...The more you begin.With this approach we the
-          Vlogiffy are ready to guide with your destinations.Check our latest
+          Vloguider are ready to guide with your destinations.Check our latest
           updates and this will figure out new face of your journey.
         </p>
         <h3>Come Lets Explore</h3>

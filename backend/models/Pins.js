@@ -8,26 +8,37 @@ const PinSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum:['Petrol Bunk','Restaurant','Hospital','Workshop','Police Station']
+      enum: [
+        "Petrol Bunk",
+        "Restaurant",
+        "Hospital",
+        "Workshop",
+        "Police Station",
+        "Tourist Place"
+      ],
+      default: 'Tourist Place',
     },
-    sim:{
-      type:String,
-      enum:['Airtel','Jio','VI','BSNL']
+    sim: {
+      type: String,
+      enum: ["Airtel", "Jio", "VI", "BSNL","Network less places are also there"],
+      default: 'Network less places are also there',
     },
     title: {
       type: String,
       required: true,
+      unique:true
     },
     desc: {
       type: String,
       required: true,
     },
-    internet:{
-    type:String,
-    enum:['Airtel','Jio','VI','BSNL']
+
+    photos: {
+      type: [String],
+      required: false,
     },
-    weather:{
-      type:Number
+    weather: {
+      type: Number,
     },
     rating: {
       type: Number,
@@ -36,18 +47,17 @@ const PinSchema = new mongoose.Schema(
       max: 5,
     },
 
-
     location: {
       type: {
         type: String, // Don't do `{ location: { type: String } }`
-        default: 'Point', // 'location.type' must be 'Point'
-        required: true
+        default: "Point", // 'location.type' must be 'Point'
+        required: true,
       },
       coordinates: {
         type: [Number],
-        required: true
-      }
-    }
+        required: true,
+      },
+    },
   },
   { timestamps: true }
 );

@@ -11,7 +11,7 @@ const Trending = () => {
       {destination.map((dest)=>(
         <div >
 
- <Link style={{textDecoration:"none"}}>
+ <Link to="/feature" style={{textDecoration:"none"}}>
  <div className='destination'>
     <div >
      <img src={dest.img} />

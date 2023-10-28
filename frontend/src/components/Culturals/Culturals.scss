@@ -1,20 +1,23 @@
 .culturals {
   margin-top: 10px;
+  overflow: hidden;
 
   .container {
     position: relative;
     margin-top: 80px;
     display: flex;
     gap: 20px;
-
+    padding: 0px 0px;
+    width: max-content;
     overflow-x: scroll;
-
+    overflow-y: hidden;
     cursor: pointer;
 
     .img {
       img {
         height: 400px;
         width: 300px;
+        object-fit: cover;
       }
     }
     .text {
@@ -37,24 +40,24 @@
     align-items: center;
     justify-content: center;
 
-    input{
-    padding: 12px 70px;
-    border: 1px solid gray;
-    outline: none;
+    input {
+      padding: 12px 70px;
+      border: 1px solid gray;
+      outline: none;
     }
-    input::placeholder{
-    font-size: 20px;
+    input::placeholder {
+      font-size: 20px;
     }
-    .subBtn{
-    padding: 12px;
-    background-color: red;
-    color: white;
-    font-size: 12px;
-    font-weight: 800;
-    border-radius: 10px;
-    border-right: 4px solid black;
-    border-bottom: 4px solid black;
-    cursor: pointer;
+    .subBtn {
+      padding: 12px;
+      background-color: red;
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 10px;
+      border-right: 4px solid black;
+      border-bottom: 4px solid black;
+      cursor: pointer;
     }
   }
 }

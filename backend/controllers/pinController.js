@@ -2,18 +2,25 @@ const Pin = require("../models/Pins");
 
 const createPin = async (req, res) => {
   try {
-    const { username, category ,sim,title, desc, rating, lat, long, location } = req.body;
+    const {
+      username,
+      category,
+      sim,
+      title,
+      desc,
+      rating,
+      lat,
+      long,
+      location,
+    } = req.body;
 
-    console.log(category,sim);
     const user = new Pin({
-
-      ...req.body
+      ...req.body,
     });
 
-    const newUser = await user.save();
+    const newPin = await user.save();
 
-
-    res.status(200).json(newUser);
+    res.status(200).json(newPin);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -25,7 +32,6 @@ const getPin = async (req, res) => {
     let pins;
     if (title) {
       const sanitizedTitle = title.replace(/"/g, "");
-      console.log(sanitizedTitle);
       pins = await Pin.find({
         title: { $regex: sanitizedTitle ? sanitizedTitle : "", $options: "i" },
       });
@@ -44,7 +50,7 @@ const latlongPin = (req, res) => {
   // const maxDistance = 1000 / 6371; // Convert 5 kilometers to radians (6371 is the Earth's radius in km)
   const { latitude, longitude } = req.query;
 
-  const radius = 5 / 6371;
+  const radius = 10 / 6371;
 
   Pin.find({
     "location.coordinates": {
@@ -56,6 +62,7 @@ const latlongPin = (req, res) => {
 
     .then((results) => {
       res.json(results).status(200);
+
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -63,4 +70,15 @@ const latlongPin = (req, res) => {
     });
 };
 
-module.exports = { createPin, getPin, latlongPin };
+const deletePin = async (req, res, next) => {
+  try {
+    await Pin.findByIdAndDelete(req.params.id);
+
+    res.status(200).json("Pin Deleted Successfully");
+  } catch (error) {
+    next(error);
+    console.log(error);
+
+  }
+};
+module.exports = { createPin, getPin, latlongPin ,deletePin};

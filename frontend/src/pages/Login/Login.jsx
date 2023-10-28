@@ -15,30 +15,18 @@ import {
 } from "../../components/redux/authSlice";
 // import { loginUser } from "../../components/redux/loginUser";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBCard,
-  MDBCardBody,
-  MDBCardImage,
-  MDBRow,
-  MDBCol,
-  MDBIcon,
-  MDBInput,
-} from "mdb-react-ui-kit";
 
 const Login = () => {
-
   const [credentials, setCredentials] = useState({
     username: undefined,
     password: undefined,
   });
 
-  const [dataset, setDataset] = useState("");
+  const [dataset, setDataset] = useState({});
   const [errorData, setError] = useState("");
 
   const dispatch = useDispatch();
-  const navigate = useNavigate("/");
+  const navigate = useNavigate();
 
   const loginSchema = yup.object().shape({
     username: yup.string().min(4).max(12).required("Please enter fullname"),
@@ -54,9 +42,6 @@ const Login = () => {
   });
 
   const { user, error, loading, message } = useSelector((state) => state.auth);
-  console.log(user?.payload)
-
-
 
   const handleChange = (e) => {
     setCredentials((prev) => ({
@@ -65,49 +50,36 @@ const Login = () => {
     }));
   };
   const handleLogin = async (e) => {
-e.preventDefault()
+    e.preventDefault()
 
     try {
-      loginUser(credentials, dispatch);
+      const username = credentials.username;
+      const password = credentials.password;
+      // dispatch(loginStart());
+      const res = await axios.post(
+        "http://localhost:3001/api/auth/login",
+        { username, password },
+        {
+          withCredentials: true,
+        }
+      );
+
+
+      localStorage.setItem("user", JSON.stringify(res?.data));
+      console.log(res);
+      // dispatch(loginSuccess({ payload: res?.data?.details }));
+
+      navigate("/");
+      window.location.reload();
+
     } catch (error) {
       console.log(error);
     }
   };
-  const loginUser = async (credentials, dispatch) => {
-    dispatch(loginStart(credentials));
-    try {
-      const username = credentials.username;
-      const password = credentials.password;
 
-      const res = await axios
-        .post(
-          "http://localhost:3001/api/auth/login",
-          { username, password },
-          {
-            withCredentials: true,
-          }
-        )
-        .then(function (response) {
-
-          dispatch(loginSuccess({ payload: response.data.details }));
-
-          navigate("/");
-          window.location.reload();
-
-        })
-        .catch(function (error) {
-          // console.log(error);
-          dispatch(loginError(error));
-          setError(error);
-        });
-    } catch (error) {
-      // setError(error);
-    }
-  };
   useEffect(() => {
 
-    localStorage.setItem("user", JSON.stringify(user?.payload));
-  }, [user?.payload]);
+  }, [dataset])
 
 
   return (
@@ -117,7 +89,7 @@ e.preventDefault()
     //   onSubmit={submitForm}
     // >
     <div className="Login">
-      <form onSubmit={handleSubmit((d) => console.log(d))}>
+      <form onSubmit={handleSubmit}>
         <div className="container">
           <div className="image">
             <img
@@ -152,7 +124,7 @@ e.preventDefault()
             <input
               {...register("password")}
               onChange={handleChange}
-              type="text"
+              type="password"
               placeholder="Enter your password"
               className="texts"
               id="password"

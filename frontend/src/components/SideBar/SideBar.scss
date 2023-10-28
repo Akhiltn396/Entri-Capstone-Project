@@ -1,7 +1,8 @@
 .sidebar {
   width: 350px;
-  height: 665px;
+  height: 707px;
   overflow-y: scroll;
+
 
 
 
@@ -19,6 +20,10 @@ padding: 3px;
 border: none;
 border-radius: 5px;
 outline: none;
+}
+h3{
+	font-style: normal;
+  font-size: 20px;
 }
 button{
 background-color: yellow;
