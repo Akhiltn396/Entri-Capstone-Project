@@ -7,26 +7,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 // import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { useDispatch, useSelector } from "react-redux";
-import {
-  logOut,
-  loginError,
-  loginStart,
-  loginSuccess,
-} from "../../components/redux/authSlice";
-// import { loginUser } from "../../components/redux/loginUser";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBCard,
-  MDBCardBody,
-  MDBCardImage,
-  MDBRow,
-  MDBCol,
-  MDBIcon,
-  MDBInput,
-} from "mdb-react-ui-kit";
 
+import { Link, useNavigate } from "react-router-dom";
 const Register = () => {
   const [credentials, setCredentials] = useState([
     {

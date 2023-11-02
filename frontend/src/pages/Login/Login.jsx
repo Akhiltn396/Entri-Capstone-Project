@@ -7,14 +7,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 // import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { useDispatch, useSelector } from "react-redux";
-import {
-  logOut,
-  loginError,
-  loginStart,
-  loginSuccess,
-} from "../../components/redux/authSlice";
+
 // import { loginUser } from "../../components/redux/loginUser";
 import { Link, useNavigate } from "react-router-dom";
+import { loginStart, loginSuccess } from "../../redux/authSlice";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -43,6 +39,7 @@ const Login = () => {
 
   const { user, error, loading, message } = useSelector((state) => state.auth);
 
+  console.log(user)
   const handleChange = (e) => {
     setCredentials((prev) => ({
       ...prev,
@@ -55,7 +52,7 @@ const Login = () => {
     try {
       const username = credentials.username;
       const password = credentials.password;
-      // dispatch(loginStart());
+      dispatch(loginStart());
       const res = await axios.post(
         "http://localhost:3001/api/auth/login",
         { username, password },
@@ -65,22 +62,20 @@ const Login = () => {
       );
 
 
-      localStorage.setItem("user", JSON.stringify(res?.data));
-      console.log(res);
-      // dispatch(loginSuccess({ payload: res?.data?.details }));
+      dispatch(loginSuccess({ payload: res?.data?.details }));
 
       navigate("/");
-      window.location.reload();
+      // window.location.reload();
 
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
+useEffect(()=>{
+  localStorage.setItem("user", JSON.stringify(user?.payload));
 
-  }, [dataset])
-
+},[user?.payload])
 
   return (
     // <Formik

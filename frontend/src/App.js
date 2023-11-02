@@ -20,23 +20,20 @@ import { useEffect } from "react";
 function App() {
   const queryClient = new QueryClient();
   let persistor = persistStore(store);
-  const currentUser = JSON.parse(localStorage.getItem("user"));
-  console.log(currentUser);
+  const { user, error, loading, message } = useSelector((state) => state.auth);
 
-useEffect(() => {
-console.log("Hii");
-}, [currentUser])
+  console.log(user);
 
   const Layout = () => {
     return (
       <div className="app">
         <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <Navbar />
-          <QueryClientProvider client={queryClient}>
-            <Outlet />
-          </QueryClientProvider>
-          <Footer />
+          <PersistGate loading={null} persistor={persistor}>
+            <Navbar />
+            <QueryClientProvider client={queryClient}>
+              <Outlet />
+            </QueryClientProvider>
+            <Footer />
           </PersistGate>
         </Provider>
       </div>
@@ -54,8 +51,11 @@ console.log("Hii");
         },
         {
           path: "/feature",
-          element:
-          <ProtectedRoutes isAuthenticated={currentUser}><Feature /></ProtectedRoutes>
+          element: (
+            <ProtectedRoutes isAuthenticated={user}>
+              <Feature />
+            </ProtectedRoutes>
+          ),
         },
         {
           path: "/drag",

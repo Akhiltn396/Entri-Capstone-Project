@@ -16,6 +16,7 @@
     "@types/mapbox-gl": "^2.7.15",
     "axios": "^1.5.1",
     "bootstrap": "^5.3.2",
+    "current-location-geo": "^1.1.5",
     "mapbox-gl": "^2.15.0",
     "mdb-react-ui-kit": "^6.3.0",
     "popper.js": "^1.16.1",

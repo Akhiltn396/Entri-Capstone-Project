@@ -4,27 +4,35 @@ import RoomIcon from "@mui/icons-material/Room";
 import StarIcon from "@mui/icons-material/Star";
 import "./Feature.scss";
 import "mapbox-gl/dist/mapbox-gl.css";
-
+import { getLocation } from "current-location-geo";
 import { QueryClient, useMutation, useQuery } from "react-query";
 import { format } from "timeago.js";
 import newRequest from "../../utils/newRequest";
 import SideBar from "../../components/SideBar/SideBar";
 import { useDispatch, useSelector } from "react-redux";
 import upload from "../../components/utils/upload";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
+import { search } from "../../redux/searchSlice";
+import Location from "../../img/current-location-icon.png"
+
 
 const Feature = () => {
   const dispatch = useDispatch();
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
-  const search = useSelector((state) => state.search);
-  const place = search.destination;
-  console.log(currentUser?.details?.isAdmin);
+  const searched = useSelector((state) => state.search);
+  const place = searched.destination;
+  const [currentlat, setLat] = useState();
+  const [currentlong, setLong] = useState();
+  console.log(currentlat,currentlong);
+  const [currentaddress, setAddress] = useState();
+
   const [viewPort, setViewport] = useState({
-    latitude: search.latitude ? search.latitude : 10.1632,
-    longitude: search.longitude ? search.longitude : 76.6413,
-    zoom: search.zoom || 6,
+    latitude: searched.latitude ? searched.latitude : currentlat,
+    longitude: searched.longitude ? searched.longitude : currentlong,
+    zoom: searched.zoom || 6,
   });
+
 
   const latitude = viewPort.latitude;
   const longitude = viewPort.longitude;
@@ -47,7 +55,6 @@ const Feature = () => {
   const [uploading, setUploading] = useState(false);
   const [title, setTitle] = useState(null);
   const [desc, setDesc] = useState(null);
-  console.log(photos);
 
   const [star, setStar] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -119,7 +126,7 @@ const Feature = () => {
     e.preventDefault();
 
     const newPin = {
-      username: currentUser?.details?.username,
+      username: currentUser?.username,
       category,
       sim,
       photos,
@@ -142,10 +149,35 @@ const Feature = () => {
   const mutationDelete = useMutation((id) => {
     return newRequest.delete(`/${id}`);
   });
-  const handleDelete = (id) =>{
+  const handleDelete = (id) => {
     mutationDelete.mutate(id);
-  }
 
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLat(position.coords.latitude);
+          setLong(position.coords.longitude);
+        },
+        (error) => {
+          console.error(`Error getting location: ${error.message}`);
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by your browser.");
+    }
+  }, []);
+
+  const handleCLick = (e) => {
+    e.preventDefault();
+    // setViewport({ ...viewPort, latitude: currentlat, longitude: currentlong });
+
+    dispatch(search({currentaddress,currentlat,currentlong}));
+    // // dispatch(remove())
+    window.location.reload();
+  };
   return (
     <div className="feature" style={{ height: "100vh", width: "100vw" }}>
       <SideBar latitude={latitude} longitude={longitude} />
@@ -171,10 +203,9 @@ const Feature = () => {
                   <RoomIcon
                     style={{
                       fontSize: viewPort.zoom * 6,
-                      color:
-                         currentUser?.details?.isAdmin
-                          ? "red"
-                          : "slateblue",
+                      color: currentUser?.isAdmin
+                        ? "red"
+                        : "slateblue",
                       cursor: "pointer",
                     }}
                     onClick={() => handleMarkerClick(d._id, d.lat, d.long)}
@@ -195,11 +226,13 @@ const Feature = () => {
                     }}
                     className="string"
                   >
-
                     <div className="card">
-                      {currentUser?.details?.isAdmin &&
-                    <DeleteIcon  className="delete" onClick={()=>handleDelete(d._id)}/>
-                      }
+                      {currentUser?.isAdmin && (
+                        <DeleteIcon
+                          className="delete"
+                          onClick={() => handleDelete(d._id)}
+                        />
+                      )}
                       <label>Place</label>
                       <h4 className="place">{d.title}</h4>
                       <label>Review</label>
@@ -221,7 +254,7 @@ const Feature = () => {
             ))}
 
         {newPlace &&
-          (!currentUser?.details?.isAdmin ? (
+          (!currentUser?.isAdmin ? (
             <Popup
               longitude={newPlace?.lng}
               latitude={newPlace?.lat}
@@ -340,6 +373,9 @@ const Feature = () => {
             </Popup>
           ))}
       </Map>
+      <div className="current" onClick={handleCLick}>
+       <img src={Location} alt="" />
+      </div>
     </div>
   );
 };

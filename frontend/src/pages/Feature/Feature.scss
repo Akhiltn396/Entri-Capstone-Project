@@ -113,4 +113,17 @@
       cursor: pointer;
     }
   }
+  .current{
+  cursor: pointer;
+  position: fixed;
+  left: 90rem;
+  bottom:100px;
+
+  img{
+  width: 50px;
+  margin-left: 100px;
+
+  }
+
+  }
 }

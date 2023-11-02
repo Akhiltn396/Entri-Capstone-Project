@@ -3,18 +3,18 @@ const searchSlice = createSlice({
   name: "search",
   initialState: {
     destination:"",
-    latitude: 10.1632,
-    longitude : 76.6413,
+    latitude: undefined,
+    longitude : undefined,
 
     zoom: 6,
   },
   reducers: {
     search: (state, action) => {
 
-      state.destination = action?.payload?.title;
-      state.latitude = action?.payload?.location.coordinates[1];
-      state.longitude = action?.payload?.location.coordinates[0];
-      state.zoom = 8;
+      state.destination = action?.payload?.title || action?.payload?.currentaddress;
+      state.latitude = action?.payload?.location?.coordinates[1] || action?.payload?.currentlat;
+      state.longitude = action?.payload?.location?.coordinates[0] || action?.payload?.currentlong;
+      state.zoom = 11;
     },
     remove: (state, action) => {
       state.latitude = "";

@@ -6,9 +6,9 @@ import reportWebVitals from './reportWebVitals';
 
 // import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { Provider } from 'react-redux';
-import store from './components/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from "redux-persist";
+import store from './redux/store';
 
 let persistor = persistStore(store);
 

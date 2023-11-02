@@ -3,8 +3,8 @@ import "./Navbar.scss";
 import Cam from "../../img/camera.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logOut } from "../redux/authSlice";
 import { remove } from "../../redux/searchSlice";
+import { logOut } from "../../redux/authSlice";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -19,11 +19,12 @@ const Navbar = () => {
     navigate("/register");
   };
   const handleLogout = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    dispatch(remove());
+
     localStorage.setItem("user", null);
     navigate("/");
     dispatch(logOut(currentUser));
-    dispatch(remove());
   };
   return (
     <div className="navbar">
@@ -38,7 +39,6 @@ const Navbar = () => {
         <div className="user">
           {currentUser ? (
             <>
-
               <button className="button login" onClick={handleLogout}>
                 Logout
               </button>

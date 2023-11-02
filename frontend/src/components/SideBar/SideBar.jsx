@@ -7,8 +7,10 @@ import axios from "axios";
 import useFetch from "../useFetch";
 import Image from "../Image/Image";
 
+
 const SideBar = ({ latitude, longitude }) => {
   const [destination, setDestinations] = useState("Kerala");
+
   const [open, setOpen] = useState(false);
   let componentMounted = true;
   const [weather, setWeather] = useState([]);
@@ -33,6 +35,7 @@ const SideBar = ({ latitude, longitude }) => {
         }),
   });
   const photos = data?.[0]?.photos;
+
 
 
   // Create an object to store unique values based on the 'sim' field
@@ -93,6 +96,7 @@ const SideBar = ({ latitude, longitude }) => {
   const handleOpen = () => {
     setOpen(true);
   };
+
   return (
     <div className="sidebar">
       <div className="container">
