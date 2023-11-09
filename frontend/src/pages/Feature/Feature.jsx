@@ -4,7 +4,6 @@ import RoomIcon from "@mui/icons-material/Room";
 import StarIcon from "@mui/icons-material/Star";
 import "./Feature.scss";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { getLocation } from "current-location-geo";
 import { QueryClient, useMutation, useQuery } from "react-query";
 import { format } from "timeago.js";
 import newRequest from "../../utils/newRequest";
@@ -14,10 +13,14 @@ import upload from "../../components/utils/upload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { search } from "../../redux/searchSlice";
 import Location from "../../img/current-location-icon.png"
+import {  useLocation } from "react-router-dom";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+
 
 
 const Feature = () => {
   const dispatch = useDispatch();
+
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
   const searched = useSelector((state) => state.search);
@@ -30,7 +33,7 @@ const Feature = () => {
   const [viewPort, setViewport] = useState({
     latitude: searched.latitude ? searched.latitude : currentlat,
     longitude: searched.longitude ? searched.longitude : currentlong,
-    zoom: searched.zoom || 6,
+    zoom: searched.zoom || 4,
   });
 
 
@@ -151,6 +154,8 @@ const Feature = () => {
   });
   const handleDelete = (id) => {
     mutationDelete.mutate(id);
+    window.location.reload();
+
 
   };
 
@@ -179,7 +184,11 @@ const Feature = () => {
     window.location.reload();
   };
   return (
+
+
     <div className="feature" style={{ height: "100vh", width: "100vw" }}>
+
+
       <SideBar latitude={latitude} longitude={longitude} />
       <Map
         mapboxAccessToken="pk.eyJ1IjoiYWtoaWwxMjM4OTAiLCJhIjoiY2xuZGI2ZWdyMDJ5OTJtcmxqbXM0MGc1eiJ9.cfe6FlxCcLvagq0Egp0Vmw"
@@ -191,7 +200,7 @@ const Feature = () => {
         mapStyle="mapbox://styles/mapbox/streets-v9"
       >
         {isLoading
-          ? "loading"
+          ? <LoadingSpinner/>
           : data?.map((d) => (
               <>
                 <Marker
@@ -318,6 +327,7 @@ const Feature = () => {
                 <form onSubmit={handleSubmit}>
                   <label>Category</label>
                   <select onChange={(e) => setCategory(e.target.value)}>
+                    <option value="Tourist Place">Tourist Place</option>
                     <option value="Petrol Bunk">Petrol Pump</option>
                     <option value="Restaurant">Restaurant</option>
                     <option value="Hospital">Hospital</option>
@@ -374,9 +384,13 @@ const Feature = () => {
           ))}
       </Map>
       <div className="current" onClick={handleCLick}>
+
        <img src={Location} alt="" />
       </div>
+
     </div>
+
+
   );
 };
 

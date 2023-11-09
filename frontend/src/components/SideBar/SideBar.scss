@@ -3,38 +3,32 @@
   height: 707px;
   overflow-y: scroll;
 
-
-
-
   .container {
     padding-left: 10px;
 
-
-label{
-color: red;
-width: max-content;
-text-decoration:underline;
-}
-input{
-padding: 3px;
-border: none;
-border-radius: 5px;
-outline: none;
-}
-h3{
-	font-style: normal;
-  font-size: 20px;
-}
-button{
-background-color: yellow;
-padding: 5px;
-border: none;
-border-radius: 5px;
-color: gray;
-cursor: pointer;
-}
+    label {
+      color: white;
+      width: max-content;
+      text-decoration: underline;
+    }
+    input {
+      padding: 3px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+    h3 {
+      font-style: normal;
+      font-size: 20px;
+      color:#FFECD1
+    }
+    button {
+      background-color: yellow;
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+      color: gray;
+      cursor: pointer;
+    }
   }
-
-
-
 }

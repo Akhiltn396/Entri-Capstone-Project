@@ -6,7 +6,7 @@ const searchSlice = createSlice({
     latitude: undefined,
     longitude : undefined,
 
-    zoom: 6,
+    zoom: 4,
   },
   reducers: {
     search: (state, action) => {

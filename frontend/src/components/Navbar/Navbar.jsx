@@ -10,7 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const currentUser = JSON.parse(localStorage.getItem("user"));
+  const currentUser = JSON.parse(localStorage.getItem("user"))
   const handleLogin = () => {
     navigate("/login");
   };
@@ -18,7 +18,7 @@ const Navbar = () => {
   const handleRegister = () => {
     navigate("/register");
   };
-  const handleLogout = (e) => {
+  const handleLogout = async (e) => {
     e.preventDefault();
     dispatch(remove());
 
@@ -39,6 +39,12 @@ const Navbar = () => {
         <div className="user">
           {currentUser ? (
             <>
+            {
+            currentUser?.isAdmin ?
+            <div>Hey you are an admin</div>
+            :
+            <div>Hey {currentUser?.username}</div>
+            }
               <button className="button login" onClick={handleLogout}>
                 Logout
               </button>

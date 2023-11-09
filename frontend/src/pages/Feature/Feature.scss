@@ -1,7 +1,7 @@
 .feature {
   position: fixed;
   display: flex;
-  background-color: lightgray;
+  background-color: black;
   .mapboxgl-canvas {
     position: absolute;
     top: 0;
@@ -116,7 +116,7 @@
   .current{
   cursor: pointer;
   position: fixed;
-  left: 90rem;
+  left: 80rem;
   bottom:100px;
 
   img{

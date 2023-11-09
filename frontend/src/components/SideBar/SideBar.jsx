@@ -93,6 +93,7 @@ const SideBar = ({ latitude, longitude }) => {
 
   let temp = (weather?.main?.temp - 273.15).toFixed(2);
 
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -115,20 +116,36 @@ const SideBar = ({ latitude, longitude }) => {
 
         <br />
         <label>Internet/Connection availability</label>
+
         {filteredData?.map((d) => (
+
           <h3>{d?.sim}</h3>
+
         ))}
         <br />
         <label>Weather</label>
+        {
+        temp === "NaN" ?
+        <>
+        <br />
+        <span>Weather Details not avbailable</span>
+        </>
+        :
+        <>
+
         <br />
         <h3>
           <span>{temp}</span> degree celsius
         </h3>
+        </>
+        }
+
         <br />
+        <br/>
         <label>Images</label>
 
         <br />
-        <br />
+
         {photos?.length === 0 ? (
           <div>Images Not available</div>
         ) : (
@@ -139,6 +156,14 @@ const SideBar = ({ latitude, longitude }) => {
             {open && <Image img={photos} open={setOpen} />}
           </div>
         )}
+        <br />
+        <label>Nearest Tourist Location</label>
+        {data?.map((item) => {
+          if (item?.category === "Tourist Place") {
+            return <h3>{item?.title}</h3>;
+          }
+          return null; // Skip items that don't match the category
+        })}
         <br />
         <label>Nearest Workshops</label>
         {data?.map((item) => {
